@@ -5,34 +5,44 @@ import { styles } from './style'
 import RatingStar from '../RatingStar';
 import { useNavigation } from '@react-navigation/native';
 import { Professional } from '../../mocks/ProfissionalMocks';
+import { router } from 'expo-router';
+import { User } from '@/interfaces/user';
 
 
 interface CardButtonProps {
-    data: Professional
+    data: User
 }
 
 
-function ProfissionalCard({ data}: CardButtonProps) {
+function ProfissionalCard({ data }: CardButtonProps) {
 
-    const navigation = useNavigation();
-   
+
     return (
-        <TouchableOpacity style={styles.container} onPress={() => { navigation.navigate("ProfissionalDetails",data) }}>
+        <TouchableOpacity style={styles.container}
+            onPress={() => {
+                router.push({
+                    pathname: "/(auth)/professional",
+                    params: {
+                     id:data.id
+                    }
+                });
+            }}
+        >
             <View style={styles.card}>
-                <Avatar.Image size={75} source={data.image?{uri:data.image}:require('../../assets/images/notfound.png')} style={{backgroundColor:"gray"}} />
+                <Avatar.Image size={75} source={require('@/assets/images/pessoa.png')} style={{ backgroundColor: "gray" }} />
                 <View style={styles.info}>
                     <Text style={styles.name}>
                         {data.name}
                     </Text>
                     <View style={styles.serviceContainer}>
                         <Text style={styles.service}>
-                            {data.service}
+                            {data.role.toUpperCase()}
                         </Text>
                         <Text style={styles.price}>
                             Campinas
                         </Text>
                     </View>
-                    <RatingStar rating={data.rating} small />
+                    <RatingStar rating={data.specialist_info?.rating} small />
                 </View>
 
             </View>

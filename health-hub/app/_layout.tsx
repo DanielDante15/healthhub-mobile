@@ -7,6 +7,7 @@ import { useEffect } from 'react';
 import 'react-native-reanimated';
 
 import { useColorScheme } from '@/components/useColorScheme';
+import Toast from 'react-native-toast-message';
 
 SplashScreen.preventAutoHideAsync();
 
@@ -21,9 +22,9 @@ export default function RootLayout() {
   }, [error]);
 
   useEffect(() => {
+    
     if (loaded) {
       SplashScreen.hideAsync();
-      // Aguarde até que o componente esteja montado antes de redirecionar
       router.replace("/(public)/login");
     }
   }, [loaded]);
@@ -44,6 +45,7 @@ function RootLayoutNav() {
         {/* <Stack.Screen name="(public)/" options={{ headerShown: false }} /> */}
         <Slot />
       </Stack>
+      <Toast/>
     </ThemeProvider>
   );
 }

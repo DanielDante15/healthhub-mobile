@@ -3,9 +3,19 @@ import { Tabs } from "expo-router";
 
 export default function TabsLayout() {
   return (
-    <Tabs>
+    <Tabs screenOptions={{headerShown:false}} initialRouteName="myInfo" >
       <Tabs.Screen
-        name="index"
+        name="home"
+
+        options={{
+          title: "Profissionais",
+          tabBarIcon: ({ color, size }) => (
+            <FontAwesome name="group" size={size} color={color} />
+          ),
+        }}
+      />
+      <Tabs.Screen
+        name="myInfo"
         options={{
           title: "Home",
           tabBarIcon: ({ color, size }) => (
@@ -13,21 +23,13 @@ export default function TabsLayout() {
           ),
         }}
       />
-      <Tabs.Screen
-        name="home"
-        options={{
-          title: "Screen 1",
-          tabBarIcon: ({ color, size }) => (
-            <FontAwesome name="file" size={size} color={color} />
-          ),
-        }}
-      />
+
       <Tabs.Screen
         name="agendamento"
         options={{
-          title: "Screen 2",
+          title: "Agenda",
           tabBarIcon: ({ color, size }) => (
-            <FontAwesome name="file-word-o" size={size} color={color} />
+            <FontAwesome name="calendar" size={size} color={color} />
           ),
         }}
       />

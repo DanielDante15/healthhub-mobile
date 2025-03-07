@@ -1,7 +1,7 @@
 import { View, Text, TouchableOpacity, SafeAreaView, ScrollView, Image } from 'react-native';
 import { styles } from './style'; // Importando os estilos
 import { AntDesign } from '@expo/vector-icons';
-import { RouteProp, useNavigation, useRoute } from '@react-navigation/native';
+import {  useNavigation } from '@react-navigation/native';
 import { Avatar } from 'react-native-paper';
 import RatingStar from '../../../components/RatingStar';
 import Toast from 'react-native-toast-message';
@@ -69,9 +69,9 @@ export default function ProfissionalDetails({ }) {
 
          
             <ScrollView style={styles.scrollView}>
-              <ServiceCard
+              {/* <ServiceCard
                 data={professionalsMock[0]}
-              />
+              /> */}
             </ScrollView>
           </View>
         </View>

@@ -1,41 +1,64 @@
 import * as React from 'react';
-import { TouchableOpacity, View } from 'react-native';
+import { Image, TouchableOpacity, View } from 'react-native';
 import { Avatar, Text } from 'react-native-paper';
 import { styles } from './style'
-import RatingStar from '../RatingStar';
-import { useNavigation } from '@react-navigation/native';
-import { Professional } from '../../mocks/ProfissionalMocks';
-import { AntDesign } from '@expo/vector-icons';
+
+import { router } from 'expo-router';
 
 
 interface CardButtonProps {
-    data: Professional
+    data: Service
 }
 
 
 function ServiceCard({ data }: CardButtonProps) {
-
-    const navigation = useNavigation();
-
     return (
-        <TouchableOpacity style={styles.container} onPress={() => { navigation.navigate("ProfissionalDetails", data) }}>
+        <TouchableOpacity
+            style={styles.container}
+            onPress={() => {
+                router.push({
+                    pathname: "/(auth)/service",
+                    params: {
+                        id: data.id,
+                        title: data.title
+                    },
+                });
+            }}
+        >
             <View style={styles.card}>
-                <Avatar.Image size={75} source={data.image ? { uri: data.image } : require('../../assets/images/notfound.png')} style={{ backgroundColor: "gray" }} />
                 <View style={styles.info}>
                     <Text style={styles.name}>
-                        {data.service}
+                        {data.title}
+                    </Text>
+                    <Text style={styles.description} numberOfLines={3}>
+                        {data.description}
                     </Text>
                     <View style={styles.serviceContainer}>
-                        <Text style={styles.service}>
-                            {data.price.toLocaleString('pt-br', { style: 'currency', currency: 'BRL' })}
+                        <Text style={styles.price}>
+                            {parseFloat(data.price).toLocaleString("pt-br", { style: "currency", currency: "BRL" })}
                         </Text>
-                        <AntDesign name='right' size={20}/>
+                        <Text style={styles.time}>{parseDurationToMonths(data.duration)}</Text>
                     </View>
                 </View>
-
             </View>
         </TouchableOpacity>
-    )
+    );
 }
+
+function parseDurationToMonths(duration: string): string {
+    const [daysPart] = duration.split(" ");
+    const days = parseInt(daysPart, 10);
+
+    const months = Math.floor(days / 30);
+    const remainingDays = days % 30;
+
+    if (months > 0) {
+        return `${months} ${months === 1 ? "mês" : "meses"}${remainingDays > 0 ? ` e ${remainingDays} ${remainingDays === 1 ? "dia" : "dias"}` : ""
+            }`;
+    } else {
+        return `${remainingDays} ${remainingDays === 1 ? "dia" : "dias"}`;
+    }
+}
+
 
 export default ServiceCard;

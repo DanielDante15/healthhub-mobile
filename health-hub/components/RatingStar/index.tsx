@@ -1,7 +1,7 @@
 import React from "react";
 import { View, Text } from "react-native";
 
-function RatingStar({ rating, small = false }: { rating: number, small?: boolean }) {
+function RatingStar({ rating, small = false }: { rating: any, small?: boolean }) {
 
     const renderStars = () => {
         if (rating > 5) rating = 5

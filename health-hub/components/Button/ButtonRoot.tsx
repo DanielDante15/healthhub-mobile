@@ -6,7 +6,7 @@ import { ActivityIndicator } from 'react-native-paper';
 interface ButtonRootProps {
     children: ReactNode;
     type?: 'outlined' | 'normal'
-    isLoading?: 'idle' | 'loading'|'ready';
+    isLoading?: boolean;
     onClick?: () => void;
     gap?: number;
     width?: DimensionValue;
@@ -19,8 +19,8 @@ export function ButtonRoot({ children, isLoading, onClick, type = 'normal', gap 
 
 
     return (
-        <TouchableOpacity disabled={isLoading=='loading'?true:false} onPress={onClick} style={[containerStyle, styles.container, { gap: gap, width: width }]}>
-            {isLoading == 'loading' ? <ActivityIndicator color='white' /> : children}
+        <TouchableOpacity disabled={isLoading ? true : false} onPress={onClick} style={[containerStyle, styles.container, { gap: gap, width: width }]}>
+            {isLoading ? <ActivityIndicator color='white' /> : children}
         </TouchableOpacity>
     )
 }

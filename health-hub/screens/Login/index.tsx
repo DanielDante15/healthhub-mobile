@@ -6,44 +6,47 @@ import PasswordInput from '../../components/PasswordInput';
 import { Button } from '../../components/Button';
 import { AntDesign } from '@expo/vector-icons';
 import Toast from 'react-native-toast-message';
-import  { jwtDecode } from 'jwt-decode'; // Importação correta
+import useAuthStore from '@/api/stores/authStore';
 import { router } from 'expo-router';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 export default function Login() {
 
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const { authenticate, isLoading } = useAuthStore();
 
-  function decodeToken(token: string) {
-    try {
-      const decoded = jwtDecode(token);
-      console.log(decoded);
-    } catch (error) {
-      console.error("Invalid token", error);
-    }
+  function handleLogin() {
+    authenticate({ email, password })
   }
 
-  // function handleLogin() {
-  //   dispatch(login({ email, senha: password }));
-  // }
+  useEffect(() => {
+    const checkToken = async () => {
+      try {
+        const token = await AsyncStorage.getItem('user-token');
+        const tokenData = token != null ? JSON.parse(token) : null;
 
-  // useEffect(() => {
-  //   if (token) {
-  //     decodeToken(token);
-  //   }
-  // }, [token]);
 
-  // useEffect(() => {
-  //   if (error) {
-  //     Toast.show({
-  //       type: "error",
-  //       text1: "Erro!",
-  //       text2: error,
-  //     });
-  //   }
-  // }, [error]);
+        if (tokenData && token) {
 
-  // const handleRegister = () => navigation.navigate('CadastroCliente');
+          const currentTime = Date.now() / 1000;
+          if (tokenData.exp > currentTime) {
+            router.replace('/(auth)/(drawer)/tabs/home');
+          } else {
+            await AsyncStorage.removeItem('user-token');
+          }
+        } else {
+          console.log("nao logado");
+          return
+        }
+      } catch (e) {
+        return
+      }
+    };
+
+    checkToken();
+  }, [handleLogin, router]);
+
 
   return (
     <KeyboardAvoidingView
@@ -57,18 +60,12 @@ export default function Login() {
             <PasswordInput value={password} onChange={setPassword} title='Password' />
           </View>
           <View style={styles.buttonStyles}>
-            <Button.Root isLoading={'ready'} onClick={()=>{router.replace("/(auth)/(tabs)")}} type='normal' gap={20} width="100%" >
+            <Button.Root isLoading={isLoading} onClick={handleLogin} type='normal' gap={20} width="100%" >
               <AntDesign name='login' size={24} color="white" />
               <Button.Text style={styles.loginButton}>
                 Login
               </Button.Text>
             </Button.Root>
-            {/* <Button.Root onClick={handleRegister} type='outlined' gap={20} width="100%">
-              <AntDesign name='adduser' size={30} />
-              <Button.Text style={{ fontSize: 30 }}>
-                Register
-              </Button.Text>
-            </Button.Root> */}
           </View>
         </View>
       </ScrollView>
